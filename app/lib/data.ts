@@ -10,6 +10,8 @@ import {
 } from './definitions';
 import { formatCurrency } from './utils';
 
+const connectionString = process.env.POSTGRES_URL;
+
 export async function fetchRevenue() {
   // Add noStore() here to prevent the response from being cached.
   // This is equivalent to in fetch(..., {cache: 'no-store'}).
@@ -24,7 +26,9 @@ export async function fetchRevenue() {
     const data = await sql<Revenue>`SELECT * FROM revenue`;
 
     // console.log('Data fetch completed after 3 seconds.');
-
+    if (!connectionString) {
+      console.error('Database connection string is missing!');
+    }
     return data.rows;
   } catch (error) {
     console.error('Database Error:', error);
